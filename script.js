@@ -1,65 +1,52 @@
-// URL de la API: Solicitamos 12 resultados para que la cuadrícula se vea bien
-const API_URL = 'https://randomuser.me/api/?results=20';
+// URL de FakeStoreAPI (Trae 20 productos por defecto)
+const API_URL = 'https://fakestoreapi.com/products';
 
-// Selección del contenedor donde irán las tarjetas
-const container = document.getElementById('user-container');
+const container = document.getElementById('products-container');
 
-/**
- * Función asíncrona para obtener los datos de la API
- */
-async function fetchUsers() {
+async function fetchProducts() {
     try {
-        // Usamos 'no-cors' NO sirve aquí porque oculta los datos.
-        // Intentamos una petición limpia directa.
         const response = await fetch(API_URL);
         
         if (!response.ok) {
-            throw new Error('La API no respondió correctamente');
+            throw new Error('No se pudo conectar con la tienda');
         }
 
         const data = await response.json();
-        console.log("Datos recibidos:", data); // Requisito de la rúbrica [cite: 31]
-        renderUsers(data.results);
+
+        // REQUISITO RÚBRICA: Mostrar JSON en consola
+        console.log("Catálogo de productos recibido:", data);
+
+        renderProducts(data);
 
     } catch (error) {
-        console.error("Hubo un error:", error);
-        // Mensaje visible para el usuario si falla
-        container.innerHTML = `<p style="color: red; text-align: center;">
-            Error de seguridad (CORS). <br> 
-            Intenta recargar la página o usa la Solución B.
-        </p>`;
+        console.error("Error:", error);
+        container.innerHTML = `<p style="color: red; text-align: center;">Error al cargar la tienda. Intenta más tarde.</p>`;
     }
 }
 
-/**
- * Función para renderizar los usuarios en el DOM
- * @param {Array} users - Lista de usuarios obtenida de la API
- */
-function renderUsers(users) {
-    // Limpiamos el mensaje de "Cargando..."
+function renderProducts(products) {
     container.innerHTML = '';
 
-    users.forEach(user => {
-        // Creamos el elemento div para la tarjeta
+    products.forEach(product => {
         const card = document.createElement('div');
-        card.classList.add('user-card');
+        card.classList.add('product-card');
 
-        // Construimos el contenido HTML de la tarjeta
-        // Usamos datos anidados como user.name.first, user.email, etc.
+        // Renderizamos imagen, categoría, título y precio
         card.innerHTML = `
-            <img src="${user.picture.large}" alt="Foto de ${user.name.first}">
-            <h3>${user.name.first} ${user.name.last}</h3>
-            <p><strong>Email:</strong> ${user.email}</p>
-            <p><strong>País:</strong> ${user.location.country}</p>
-            <p><strong>Tel:</strong> ${user.phone}</p>
+            <div class="image-container">
+                <img src="${product.image}" alt="${product.title}">
+            </div>
+            <div class="product-info">
+                <p class="category">${product.category}</p>
+                <h3>${product.title}</h3>
+                <p class="price">$${product.price}</p>
+                <button class="btn-add">Agregar al Carrito</button>
+            </div>
         `;
 
-        // Agregamos la tarjeta al contenedor principal
         container.appendChild(card);
     });
 }
 
-// Iniciamos la aplicación
-
-document.addEventListener('DOMContentLoaded', fetchUsers);
-
+// Inicializar
+document.addEventListener('DOMContentLoaded', fetchProducts);
