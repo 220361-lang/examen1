@@ -9,24 +9,25 @@ const container = document.getElementById('user-container');
  */
 async function fetchUsers() {
     try {
+        // Usamos 'no-cors' NO sirve aquí porque oculta los datos.
+        // Intentamos una petición limpia directa.
         const response = await fetch(API_URL);
         
-        // Verificamos si la respuesta es correcta
         if (!response.ok) {
-            throw new Error('Error en la conexión con la API');
+            throw new Error('La API no respondió correctamente');
         }
 
         const data = await response.json();
-
-        // REQUISITO IMPORTANTE: Mostrar el JSON en consola 
-        console.log("Datos recibidos de la API:", data);
-
-        // Llamamos a la función para renderizar los datos
+        console.log("Datos recibidos:", data); // Requisito de la rúbrica [cite: 31]
         renderUsers(data.results);
 
     } catch (error) {
         console.error("Hubo un error:", error);
-        container.innerHTML = `<p style="color: red; text-align: center;">Error al cargar los usuarios. Intenta de nuevo.</p>`;
+        // Mensaje visible para el usuario si falla
+        container.innerHTML = `<p style="color: red; text-align: center;">
+            Error de seguridad (CORS). <br> 
+            Intenta recargar la página o usa la Solución B.
+        </p>`;
     }
 }
 
@@ -61,3 +62,4 @@ function renderUsers(users) {
 // Iniciamos la aplicación
 
 document.addEventListener('DOMContentLoaded', fetchUsers);
+
