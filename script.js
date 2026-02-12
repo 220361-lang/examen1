@@ -1,5 +1,5 @@
 // URL de la API: Solicitamos 12 resultados para que la cuadrícula se vea bien
-const API_URL = 'https://randomuser.me/api/?results=12';
+const API_URL = 'https://randomuser.me/api/?results=20';
 
 // Selección del contenedor donde irán las tarjetas
 const container = document.getElementById('user-container');
@@ -59,4 +59,5 @@ function renderUsers(users) {
 }
 
 // Iniciamos la aplicación
+
 document.addEventListener('DOMContentLoaded', fetchUsers);
